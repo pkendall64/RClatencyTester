@@ -2,7 +2,6 @@
 #include "SoftwareSerial.h"
 
 SoftwareSerial usbSerial;
-auto &testSerial = Serial;
 
 //#define USE_GHST
 #define USE_CRSF
@@ -10,7 +9,7 @@ auto &testSerial = Serial;
 //#define USE_IBUS
 ////#define USE_SRXL2
 
-// #define USE_ARM_AUX
+#define USE_ARM_AUX
 
 bool testRunning = false;
 #define NumOfTests 500
@@ -125,7 +124,7 @@ void ICACHE_RAM_ATTR RCcallback(volatile uint16_t *data)
     if (data[2] > 1000)
     #endif
     {
-      digitalWrite(D0, LOW);
+      pinMode(D0, OUTPUT);
       CurrState = 0;
       StopTriggerMicros = now;
       uint32_t result = StopTriggerMicros - BeginTriggerMicros;
@@ -175,7 +174,7 @@ void inline PreTrigger()
 
 void inline DoTrigger()
 {
-  digitalWrite(D0, HIGH);
+  pinMode(D0, INPUT);
   BeginTriggerMicros = micros();
   CurrState = 2;
 }
@@ -196,6 +195,7 @@ void startTest()
 void setup()
 {
   pinMode(D0, OUTPUT);
+  digitalWrite(D0, LOW);
   pinMode(D1, OUTPUT);
   digitalWrite(D1, LOW);
   pinMode(0, INPUT_PULLUP);
